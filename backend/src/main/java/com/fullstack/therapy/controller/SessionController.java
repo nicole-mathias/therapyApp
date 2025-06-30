@@ -27,8 +27,8 @@ import org.springframework.web.bind.annotation.PutMapping;
 
 
 
-@CrossOrigin(origins = "http://localhost:3000")
-@RestControllerfrontend/package-lock.jsonfrontend/package-lock.json
+@CrossOrigin(origins = "http://localhost:8081")
+@RestController
 @RequestMapping("/therapy")
 public class SessionController {
     
