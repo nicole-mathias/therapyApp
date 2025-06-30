@@ -37,7 +37,7 @@ import com.fullstack.therapy.model.Clients;
 import com.fullstack.therapy.repository.ClientsRepository;
 
 
-@CrossOrigin(origins = "http://localhost:8081")
+@CrossOrigin(origins = "http://localhost:3000")
 @RestController()
 @RequestMapping("/therapy")
 public class ClientsController {
