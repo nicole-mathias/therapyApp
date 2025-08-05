@@ -1,38 +1,108 @@
-import logo from './logo.svg';
+import React, { useState } from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import Login from './components/Login';
+import Client from './Client';
+import TherapyChat from './components/TherapyChat';
+import CrisisDashboard from './components/CrisisDashboard';
+import ClientDashboard from './components/ClientDashboard';
 import './App.css';
-import 'bootstrap/dist/css/bootstrap.min.css';
-
-
-import { google } from '@ai-sdk/google';
-// import { generateText } from 'ai';
-
-import Client from "./Client.js";
-
-
 
 function App() {
+  const [user, setUser] = useState(null);
+  const [selectedClient, setSelectedClient] = useState(null);
 
-  // const model = google('gemini-1.5-pro-latest');
+  const handleLogin = (loginData) => {
+    setUser(loginData.user);
+    if (loginData.client) {
+      setSelectedClient(loginData.client);
+    }
+  };
 
+  const handleLogout = () => {
+    setUser(null);
+    setSelectedClient(null);
+  };
 
-  // const res = () => {
-  //   const { text } = generateText({
-  //     model: google('gemini-1.5-pro-latest'),
-  //     prompt: 'Write a vegetarian lasagna recipe for 4 people.',
-  //   });
+  const handleClientSelect = (client) => {
+    setSelectedClient(client);
+  };
 
-  //   console.log("txt",text)
-  // }
-
-  
-
-  
+  // If not logged in, show login page
+  if (!user) {
+    return <Login onLogin={handleLogin} />;
+  }
 
   return (
-    <div className="App">
-        
-        <Client/>
-    </div>
+    <Router>
+      <div className="App">
+        <nav className="navbar">
+          <div className="nav-brand">
+            <h1>🧘 Zen Therapy</h1>
+          </div>
+          <div className="nav-user">
+            <span>Welcome, {user.firstName} {user.lastName}</span>
+            <button onClick={handleLogout} className="logout-btn">
+              Logout
+            </button>
+          </div>
+        </nav>
+
+        <div className="main-content">
+          <Routes>
+            {user.role === 'THERAPIST' ? (
+              // Therapist Routes
+              <>
+                <Route 
+                  path="/" 
+                  element={
+                    <Client 
+                      onClientSelect={handleClientSelect} 
+                    />
+                  } 
+                />
+                <Route 
+                  path="/chat/:clientId" 
+                  element={
+                    selectedClient ? (
+                      <TherapyChat client={selectedClient} />
+                    ) : (
+                      <Navigate to="/" replace />
+                    )
+                  } 
+                />
+                <Route 
+                  path="/crisis" 
+                  element={<CrisisDashboard />} 
+                />
+              </>
+            ) : (
+              // Client Routes
+              <>
+                <Route 
+                  path="/" 
+                  element={
+                    <ClientDashboard 
+                      user={user} 
+                      client={selectedClient} 
+                    />
+                  } 
+                />
+                <Route 
+                  path="/chat" 
+                  element={
+                    selectedClient ? (
+                      <TherapyChat client={selectedClient} />
+                    ) : (
+                      <Navigate to="/" replace />
+                    )
+                  } 
+                />
+              </>
+            )}
+          </Routes>
+        </div>
+      </div>
+    </Router>
   );
 }
 

@@ -26,12 +26,14 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.fullstack.therapy.model.Clients;
 import com.fullstack.therapy.repository.ClientsRepository;
@@ -41,6 +43,8 @@ import com.fullstack.therapy.repository.ClientsRepository;
 @RestController()
 @RequestMapping("/therapy")
 public class ClientsController {
+
+    private static final Logger logger = LoggerFactory.getLogger(ClientsController.class);
 
     @Autowired
     ClientsRepository clientsRepository;
@@ -64,12 +68,13 @@ public class ClientsController {
             }
 
             if (clients.isEmpty()){
-                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+                return new ResponseEntity<>(new ArrayList<>(), HttpStatus.OK);
 
             }
             return new ResponseEntity<>(clients, HttpStatus.OK);
 
         } catch(Exception e) {
+            logger.error("Error getting all clients: ", e);
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }  
     }
@@ -88,14 +93,22 @@ public class ClientsController {
     @PostMapping("/clients")
     public ResponseEntity<Clients> createClient(@RequestBody Clients client){
         try{
-            Clients _client = clientsRepository.save(new Clients(client.getName(), client.getAge(), client.getDiagnosis()));
-            return new ResponseEntity<>(_client, HttpStatus.CREATED);
+            Clients _client = new Clients(client.getName(), client.getAge(), client.getDiagnosis());
+            _client.setEmergencyContactName(client.getEmergencyContactName());
+            _client.setEmergencyContactPhone(client.getEmergencyContactPhone());
+            _client.setEmergencyContactRelationship(client.getEmergencyContactRelationship());
+            _client.setTherapistNotes(client.getTherapistNotes());
+            _client.setRiskLevel(client.getRiskLevel());
+            
+            Clients savedClient = clientsRepository.save(_client);
+            return new ResponseEntity<>(savedClient, HttpStatus.CREATED);
         }catch(Exception e){
             return new ResponseEntity<>(null,HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
 
+    @PutMapping("/clients/{id}")
     public ResponseEntity<Clients> updateClient(@PathVariable int id, @RequestBody Clients client){
         Optional<Clients> clientData = clientsRepository.findById(id);
 
@@ -123,6 +136,7 @@ public class ClientsController {
     }
 
 
+    @DeleteMapping("/clients")
     public ResponseEntity<HttpStatus> deleteAllClients(){
         try{
             clientsRepository.deleteAll(null);
