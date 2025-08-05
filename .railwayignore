@@ -1,0 +1,11 @@
+node_modules/
+frontend/
+*.log
+.DS_Store
+.env
+.env.local
+.env.production
+target/
+*.jar
+*.war
+*.ear 

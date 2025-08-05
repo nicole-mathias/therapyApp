@@ -2,25 +2,17 @@ FROM openjdk:17-jdk-slim
 
 WORKDIR /app
 
-# Copy Maven wrapper and pom.xml
-COPY mvnw .
-COPY .mvn .mvn
-COPY pom.xml .
+# Copy the entire project
+COPY . .
 
 # Make mvnw executable
-RUN chmod +x mvnw
-
-# Download dependencies
-RUN ./mvnw dependency:go-offline -B
-
-# Copy source code
-COPY src src
+RUN chmod +x backend/mvnw
 
 # Build the application
-RUN ./mvnw package -DskipTests
+RUN cd backend && ./mvnw clean package -DskipTests
 
 # Expose port
 EXPOSE 8080
 
 # Run the application
-CMD ["java", "-jar", "target/therapy-0.0.1-SNAPSHOT.jar"] 
+CMD ["java", "-jar", "backend/target/therapy-0.0.1-SNAPSHOT.jar"] 
