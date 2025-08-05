@@ -1,0 +1,55 @@
+#!/bin/bash
+
+echo "🚨 Railway Backend Deployment Fix"
+echo "=================================="
+echo ""
+
+echo "📋 Step 1: Install Railway CLI"
+echo "Run this command:"
+echo "npm install -g @railway/cli"
+echo ""
+
+echo "📋 Step 2: Login to Railway"
+echo "Run this command:"
+echo "railway login"
+echo ""
+
+echo "📋 Step 3: Link to your project"
+echo "Run this command:"
+echo "railway link"
+echo ""
+
+echo "📋 Step 4: Set Environment Variables"
+echo "Run these commands (replace with your actual values):"
+echo ""
+echo "railway variables set DATABASE_URL=\"your_postgresql_connection_string\""
+echo "railway variables set DB_DRIVER=\"org.postgresql.Driver\""
+echo "railway variables set HIBERNATE_DIALECT=\"org.hibernate.dialect.PostgreSQLDialect\""
+echo "railway variables set HUGGINGFACE_API_TOKEN=\"hf_your_token_here\""
+echo "railway variables set ALLOWED_ORIGINS=\"https://zen-therapy-frontend.vercel.app\""
+echo ""
+
+echo "📋 Step 5: Deploy"
+echo "Run this command:"
+echo "railway up"
+echo ""
+
+echo "🎯 Expected Success:"
+echo "- Build completes successfully"
+echo "- Application starts on Railway"
+echo "- Logs show: 'Tomcat started on port 8080'"
+echo ""
+
+echo "🔗 Alternative: Use Railway Dashboard"
+echo "1. Go to https://railway.app/dashboard"
+echo "2. Click your project"
+echo "3. Go to 'Variables' tab"
+echo "4. Add the environment variables manually"
+echo "5. Wait for auto-redeploy"
+echo ""
+
+echo "📞 If still failing, check:"
+echo "1. PostgreSQL database is created in Railway"
+echo "2. Connection string is correct"
+echo "3. All environment variables are set"
+echo "4. No typos in variable names or values" 
