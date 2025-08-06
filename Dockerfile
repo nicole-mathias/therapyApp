@@ -4,12 +4,8 @@ FROM openjdk:17-jdk-slim
 # Set working directory
 WORKDIR /app
 
-# Copy the Maven wrapper and pom.xml
-COPY backend/mvnw .
-COPY backend/pom.xml .
-
-# Copy the source code
-COPY backend/src ./src
+# Copy the entire backend directory
+COPY backend/ .
 
 # Make mvnw executable
 RUN chmod +x mvnw
